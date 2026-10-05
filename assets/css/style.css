@@ -1,0 +1,424 @@
+/* ------------------------------------------------------------------
+   Laura Elizabeth Burnett — artist portfolio
+   One stylesheet. Edit the variables below to change the whole site.
+   ------------------------------------------------------------------ */
+
+:root {
+  --ink:        #000;
+  --grey-light: #a9a9a9;   /* "Artist Portfolio" subtitle */
+  --grey-mid:   #5c5c5c;   /* body copy */
+  --grey-rule:  #e2e2e2;   /* hairlines */
+  --paper:      #fff;
+
+  --display: "Bebas Neue", Impact, "Haettenschweiler", sans-serif;
+  --serif: "EB Garamond", Garamond, "Adobe Garamond Pro", Baskerville,
+           "Times New Roman", Times, serif;
+  --sans:  -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --sans-text: "Helvetica Neue", "HelveticaNeue-Light", Helvetica, Arial, sans-serif;
+
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+  --gap:    clamp(1rem, 2.2vw, 1.75rem);  /* between the tiles AND text-to-tiles */
+  --bar-h:  4.6rem;                        /* navbar and news bar share this */
+  --measure: 62ch;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a   { color: inherit; }
+
+.wrap { padding-inline: var(--gutter); }
+
+/* --- navbar ------------------------------------------------------- */
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: var(--bar-h);
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--grey-rule);
+  font-family: var(--sans);
+}
+
+.nav__mark {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nav__links {
+  display: flex;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.nav__links a {
+  text-decoration: none;
+  color: var(--grey-mid);
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color .18s, border-color .18s;
+}
+.nav__links a:hover            { color: var(--ink); border-bottom-color: var(--ink); }
+.nav__links a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* --- hero --------------------------------------------------------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: min-content minmax(0, 1fr);
+  gap: var(--gap);                 /* same distance as between the two tiles */
+  align-items: start;              /* text block and tiles share a top line */
+  padding-block: clamp(1.75rem, 4vw, 3.25rem);
+}
+
+.hero__name {
+  margin: 0 0 0.9rem;
+  font-family: var(--display);
+  font-weight: 400;          /* Bebas ships one weight; 700 would fake it */
+  font-size: clamp(2.8rem, 8.6vw, 7.4rem);
+  line-height: 0.88;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+}
+.hero__name span { display: block; }
+
+.hero__subtitle {
+  margin: 0 0 1.5rem;
+  font-weight: 300;
+  font-size: clamp(0.82rem, 1.25vw, 1.02rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--grey-light);
+}
+
+.hero__tagline {
+  margin: 0;
+  max-width: none;   /* the column is already sized by the name above it */
+  font-family: var(--serif);   /* same face as the body copy on every page */
+  font-weight: 400;
+  font-size: clamp(1.02rem, 1.3vw, 1.125rem);   /* tops out at body's 18px */
+  line-height: 1.7;
+  color: var(--grey-mid);
+}
+
+/* --- the two collection tiles ------------------------------------- */
+
+.collections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap);
+  width: 95%;              /* a touch smaller than the space available.
+                              Must be a definite width, not max-width +
+                              justify-self: the tiles' children are both
+                              absolutely positioned, so content-based sizing
+                              collapses them to zero. */
+  margin-inline-start: auto;  /* width given back to the gap; right edge stays
+                                 flush with the navbar and the news bar */
+}
+
+.tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  text-decoration: none;
+  background: var(--paper);
+}
+
+.tile__grid {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  overflow: hidden;
+  display: grid;
+  grid-template: 1fr 1fr / 1fr 1fr;
+  gap: 2px;
+}
+
+.tile__grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);               /* avoids hairline gaps on zoom */
+  transition: transform .55s cubic-bezier(.2,.7,.2,1), filter .4s;
+}
+
+.tile__label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--paper);
+  border-block: 1px solid var(--ink);   /* the tile's own sides close the box */
+  padding: clamp(0.6rem, 1.2vw, 0.9rem) clamp(0.7rem, 1.4vw, 1.05rem);
+  font-size: clamp(0.95rem, 1.7vw, 1.45rem);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.tile__title {
+  font-family: var(--display);
+  font-weight: 400;          /* Bebas has one weight; 700 would fake it */
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+
+.tile__label small {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--grey-light);
+  transition: color .2s;
+}
+
+.tile:hover .tile__grid img   { transform: scale(1.05); }
+.tile:hover .tile__label small { color: var(--ink); }
+.tile:focus-visible           { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+/* --- news bar: mirrors the navbar, sits on the bottom edge ---------- */
+
+.newsbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: var(--bar-h);
+  padding-block: 0.5rem;
+  border-top: 1px solid var(--grey-rule);
+}
+
+.newsbar__mark {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--grey-light);
+}
+
+.newsbar__form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.newsbar__label {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--grey-mid);
+  margin-right: 0.35rem;
+}
+
+.newsbar__form input[type="email"] {
+  width: clamp(9rem, 20vw, 15rem);
+  padding: 0.5rem 0.7rem;
+  font-family: var(--sans-text);
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+}
+.newsbar__form input[type="email"]::placeholder { color: var(--grey-light); }
+.newsbar__form input[type="email"]:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+.newsbar__form button {
+  padding: 0.55rem 1.2rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, color .2s;
+}
+.newsbar__form button:hover { background: var(--paper); color: var(--ink); }
+
+/* --- landing page fills the viewport, so the news bar lands on the
+       bottom edge on load. min-height, not height: if the window is short
+       the page simply scrolls instead of clipping. ---------------------- */
+
+body.home {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+body.home main {
+  flex: 1 1 auto;
+  display: grid;
+  align-content: center;
+}
+
+/* --- footer ------------------------------------------------------- */
+
+.foot {
+  border-top: 1px solid var(--grey-rule);
+  padding-block: 2rem 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--grey-light);
+}
+.foot a { color: var(--grey-mid); text-decoration: none; }
+.foot a:hover { color: var(--ink); }
+
+/* --- interior pages ---------------------------------------------- */
+
+.page-head {
+  padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 5vw, 3.5rem);
+}
+
+.page-head h1 {
+  margin: 0 0 0.75rem;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.page-head p {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--grey-mid);
+}
+
+/* gallery: CSS columns, so portrait and landscape work sit together
+   without any JavaScript masonry library */
+.gallery {
+  columns: 3 18rem;
+  column-gap: clamp(1rem, 2.5vw, 2rem);
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+.piece {
+  break-inside: avoid;
+  margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.piece img { width: 100%; cursor: zoom-in; }
+
+.piece figcaption {
+  margin-top: 0.65rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--grey-mid);
+}
+.piece figcaption strong { color: var(--ink); font-weight: 400; font-style: italic; }
+
+/* about */
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+}
+.about__prose { max-width: var(--measure); }
+.about__prose p { margin: 0 0 1.4rem; }
+.about__prose h2 {
+  margin: 2.5rem 0 0.75rem;
+  font-weight: 400;
+  font-size: 1.35rem;
+  letter-spacing: 0.01em;
+}
+.about__prose h2:first-child { margin-top: 0; }
+
+/* --- lightbox ----------------------------------------------------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgba(255, 255, 255, 0.97);
+}
+.lightbox[open-state="on"] { display: grid; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 82vh;
+  object-fit: contain;
+}
+.lightbox figcaption {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--grey-mid);
+}
+.lightbox__close {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.5rem);
+  right: clamp(0.75rem, 2vw, 1.5rem);
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+/* --- small screens ----------------------------------------------- */
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: clamp(2.5rem, 7vw, 3.5rem); }
+}
+
+@media (max-width: 680px) {
+  .nav         { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .newsbar     { flex-direction: column; align-items: flex-start; gap: 1rem;
+                 padding-block: 1.5rem; }
+  .newsbar__form { flex-wrap: wrap; }
+  .collections { grid-template-columns: 1fr; }
+  .about       { grid-template-columns: 1fr; }
+  .about__photo { order: -1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

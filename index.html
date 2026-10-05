@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laura Elizabeth Burnett — Artist Portfolio</title>
+<meta name="description" content="Oil pastels and relief prints by Laura Elizabeth Burnett.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="home">
+
+<header class="wrap">
+  <nav class="nav">
+    <a class="nav__mark" href="index.html">Laura Elizabeth Burnett</a>
+    <ul class="nav__links">
+      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="oil-pastels.html">Oil pastels</a></li>
+      <li><a href="relief-printing.html">Relief printing</a></li>
+      <li><a href="misc.html">Misc</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO: text on the left, the two collections on the right, tops aligned -->
+  <section class="hero wrap">
+
+    <div class="hero__text">
+      <h1 class="hero__name">
+        <span>Laura</span><span>Elizabeth</span><span>Burnett</span>
+      </h1>
+      <p class="hero__subtitle">Artist Portfolio</p>
+      <!-- FILLER — replace with your own words. Two or three sentences is plenty. -->
+      <p class="hero__tagline">
+        I work in oil pastel and cut relief blocks, drawn to the point where a
+        colour stops behaving and a surface starts showing its grain. Most of
+        what I make begins outdoors and is finished slowly at a table indoors.
+        This is a record of the work, printed and drawn, as it accumulates.
+      </p>
+    </div>
+
+    <div class="collections" aria-label="Collections">
+
+      <a class="tile" href="oil-pastels.html">
+        <div class="tile__grid" aria-hidden="true">
+          <img src="assets/images/tile-pastel-1.jpg" alt="" loading="lazy" width="600" height="600">
+          <img src="assets/images/tile-pastel-2.jpg" alt="" loading="lazy" width="600" height="600">
+          <img src="assets/images/tile-pastel-3.jpg" alt="" loading="lazy" width="600" height="600">
+          <img src="assets/images/tile-pastel-4.jpg" alt="" loading="lazy" width="600" height="600">
+        </div>
+        <span class="tile__label">
+          <span class="tile__title">Oil pastels</span>
+          <small>View</small>
+        </span>
+      </a>
+
+      <a class="tile" href="relief-printing.html">
+        <div class="tile__grid" aria-hidden="true">
+          <img src="assets/images/tile-relief-1.jpg" alt="" loading="lazy" width="600" height="600">
+          <img src="assets/images/tile-relief-2.jpg" alt="" loading="lazy" width="600" height="600">
+          <img src="assets/images/tile-relief-3.jpg" alt="" loading="lazy" width="600" height="600">
+          <img src="assets/images/tile-relief-4.jpg" alt="" loading="lazy" width="600" height="600">
+        </div>
+        <span class="tile__label">
+          <span class="tile__title">Relief printing</span>
+          <small>View</small>
+        </span>
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- NEWS BAR: same height as the navbar, and the landing page is sized to
+     100dvh so this sits on the bottom edge of the screen on load.
+
+     TO MAKE IT WORK: replace action="#" with your newsletter provider's
+     endpoint and check the field name it expects. Buttondown, free to 100
+     subscribers, is:
+       action="https://buttondown.email/api/emails/embed-subscribe/YOUR-USERNAME"
+       method="post"   field name="email"
+-->
+<section class="newsbar wrap" id="news">
+  <span class="newsbar__mark">&copy; 2026 Laura Elizabeth Burnett</span>
+  <form class="newsbar__form" action="#" method="post">
+    <span class="newsbar__label">Studio news</span>
+    <input id="email" type="email" name="email" required
+           autocomplete="email" aria-label="Email address"
+           placeholder="your@email.com">
+    <button type="submit">Subscribe</button>
+  </form>
+</section>
+
+</body>
+</html>

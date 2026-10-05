@@ -1,0 +1,16 @@
+# OS cruft
+.DS_Store
+._*
+
+# Local tooling
+node_modules/
+.wrangler/
+
+# Full-resolution masters never belong in here. Web-resolution images in
+# assets/images/ ARE committed on purpose — the site cannot deploy without them.
+masters/
+*.tif
+*.tiff
+*.heic
+*.HEIC
+*.psd
