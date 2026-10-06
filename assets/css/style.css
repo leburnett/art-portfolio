@@ -16,8 +16,8 @@
   --sans:  -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --sans-text: "Helvetica Neue", "HelveticaNeue-Light", Helvetica, Arial, sans-serif;
 
-  --gutter: clamp(1.25rem, 5vw, 5rem);
-  --gap:    clamp(1rem, 2.2vw, 1.75rem);  /* between the tiles AND text-to-tiles */
+  --gutter: clamp(1.25rem, 2.6vw, 2.75rem);
+  --gap:    clamp(1.75rem, 4.3vw, 4.25rem);  /* text-to-tile, both sides */
   --bar-h:  4.6rem;                        /* navbar and news bar share this */
   --measure: 62ch;
 }
@@ -28,6 +28,7 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--serif);
@@ -87,11 +88,21 @@ a   { color: inherit; }
 
 .hero {
   display: grid;
-  grid-template-columns: min-content minmax(0, 1fr);
-  gap: var(--gap);                 /* same distance as between the two tiles */
-  align-items: start;              /* text block and tiles share a top line */
+  grid-template-columns: minmax(0, 1fr) min-content minmax(0, 1fr);
+  gap: var(--gap);                 /* text-to-tile, both sides, equal */
+  align-items: center;             /* tiles centred against the text block */
+  /* NOT max-width + margin-inline:auto. As a grid item of <main>, auto inline
+     margins disable stretch and absorb the free space instead, so .hero
+     shrinks to fit its content, the 1fr tracks get nothing, and the tiles
+     collapse to their 1px borders. A definite width keeps stretch out of it. */
+  width: min(100%, 96rem);         /* ceiling on very wide monitors */
+  margin-inline: auto;
+  padding-inline: 0;               /* edge to edge: overrides .wrap, so the
+                                      page gutter goes to the tiles instead */
   padding-block: clamp(1.75rem, 4vw, 3.25rem);
 }
+
+.hero__text { text-align: center; }
 
 .hero__name {
   margin: 0 0 0.9rem;
@@ -125,17 +136,16 @@ a   { color: inherit; }
 
 /* --- the two collection tiles ------------------------------------- */
 
-.collections {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap);
-  width: 95%;              /* a touch smaller than the space available.
-                              Must be a definite width, not max-width +
-                              justify-self: the tiles' children are both
-                              absolutely positioned, so content-based sizing
-                              collapses them to zero. */
-  margin-inline-start: auto;  /* width given back to the gap; right edge stays
-                                 flush with the navbar and the news bar */
+/* A tile's two children are both position:absolute, so a tile has no in-flow
+   content and its intrinsic width is zero. It therefore needs a DEFINITE
+   width — width:100% of its grid area — or content-based sizing (which is
+   what justify-self other than stretch triggers) collapses it to nothing.
+   max-width then caps it, and justify-self keeps the outer edges flush with
+   the page gutters. */
+.hero > .tile {
+  width: 100%;          /* fills its whole column — no cap, so no slack beside
+                           the text. Must stay a definite width (see above). */
+  aspect-ratio: 4 / 5;  /* portrait: height grows without taking row width */
 }
 
 .tile {
@@ -147,6 +157,16 @@ a   { color: inherit; }
   border-radius: 10px;
   text-decoration: none;
   background: var(--paper);
+  transition: transform .34s cubic-bezier(.2,.7,.2,1),
+              box-shadow .34s cubic-bezier(.2,.7,.2,1);
+}
+
+/* the whole tile lifts very slightly and casts a shadow underneath */
+.tile:hover,
+.tile:focus-visible {
+  transform: scale(1.018);
+  box-shadow: 0  2px  6px -2px rgba(0, 0, 0, 0.10),
+              0 18px 38px -14px rgba(0, 0, 0, 0.32);
 }
 
 .tile__grid {
@@ -163,8 +183,6 @@ a   { color: inherit; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.001);               /* avoids hairline gaps on zoom */
-  transition: transform .55s cubic-bezier(.2,.7,.2,1), filter .4s;
 }
 
 .tile__label {
@@ -203,7 +221,6 @@ a   { color: inherit; }
   transition: color .2s;
 }
 
-.tile:hover .tile__grid img   { transform: scale(1.05); }
 .tile:hover .tile__label small { color: var(--ink); }
 .tile:focus-visible           { outline: 2px solid var(--ink); outline-offset: 4px; }
 
@@ -405,8 +422,12 @@ body.home main {
 
 /* --- small screens ----------------------------------------------- */
 
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; gap: clamp(2.5rem, 7vw, 3.5rem); }
+@media (max-width: 1200px) {
+  /* text first, then the two tiles side by side underneath */
+  .hero { grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 4vw, 2.5rem); }
+  .hero__text { grid-column: 1 / -1; order: -1; }
+  .hero { padding-inline: var(--gutter); }
+  .hero > .tile { max-width: none; aspect-ratio: 1 / 1; }
 }
 
 @media (max-width: 680px) {
@@ -414,11 +435,12 @@ body.home main {
   .newsbar     { flex-direction: column; align-items: flex-start; gap: 1rem;
                  padding-block: 1.5rem; }
   .newsbar__form { flex-wrap: wrap; }
-  .collections { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr; }
   .about       { grid-template-columns: 1fr; }
   .about__photo { order: -1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+  .tile:hover, .tile:focus-visible { transform: none; }   /* shadow only */
 }
