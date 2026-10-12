@@ -1,0 +1,93 @@
+GRID RECIPE — how the eight landing-page tile crops were made
+=============================================================
+
+Sources live outside this repo, in:
+
+    ~/Documents/ART_PORTFOLIO/grid_images/
+
+Each command writes to a scratch folder; copy the result over the tile file it
+replaces. Run them from the repo root. SRC and OUT are set once:
+
+    SRC=~/Documents/ART_PORTFOLIO/grid_images
+    OUT=/tmp/gridbuild && mkdir -p $OUT
+
+
+OIL PASTELS  (left tile)
+------------------------
+All four are plain centred crops — the work fills the frame, so there is
+nothing to balance.
+
+    python3 tools/prepare_images.py --grid --no-watermark -o $OUT \
+        $SRC/oil1.jpg $SRC/oil2.jpg $SRC/oil3.jpg $SRC/oil4.jpg
+
+    cp $OUT/oil1.jpg assets/images/tile-pastel-1.jpg
+    cp $OUT/oil2.jpg assets/images/tile-pastel-2.jpg
+    cp $OUT/oil3.jpg assets/images/tile-pastel-3.jpg
+    cp $OUT/oil4.jpg assets/images/tile-pastel-4.jpg
+
+
+RELIEF PRINTING  (right tile)
+-----------------------------
+Each one carries its own shift. See WHY below.
+
+    python3 tools/prepare_images.py --grid --no-watermark --hshift  0.10  -o $OUT $SRC/lino1.HEIC
+    python3 tools/prepare_images.py --grid --no-watermark --vshift -0.068 -o $OUT $SRC/lino2.HEIC
+    python3 tools/prepare_images.py --grid --no-watermark --vshift  0.045 -o $OUT $SRC/lino3.HEIC
+    python3 tools/prepare_images.py --grid --no-watermark                 -o $OUT $SRC/lino4.HEIC
+
+    cp $OUT/lino1.jpg assets/images/tile-relief-1.jpg
+    cp $OUT/lino2.jpg assets/images/tile-relief-2.jpg
+    cp $OUT/lino3.jpg assets/images/tile-relief-3.jpg
+    cp $OUT/lino4.jpg assets/images/tile-relief-4.jpg
+
+
+WHY THE SHIFTS EXIST
+--------------------
+The white title band lies across the middle of each tile and covers about 11%
+of every cell: the BOTTOM of the two top cells, the TOP of the two bottom ones.
+So a perfectly centred crop looks off-centre once it is on the page — top cells
+appear to sit low, bottom cells appear to sit high.
+
+    lino1  --hshift 0.10    owl, top-left. Nothing to do with the band: the
+                            crop window moves left so more of the owl and less
+                            of the tree strip is in frame.
+
+    lino2  --vshift -0.068  bird, top-right. The band hides its bottom, so the
+                            subject is lifted. Measured result: 31px of paper
+                            above, 33px below.
+
+    lino3  --vshift  0.045  blue tit, bottom-left. The band hides its top, so
+                            the subject is dropped. Measured: 21px above,
+                            21px below.
+
+    lino4  none             inktober sheet, bottom-right. Fills its cell edge
+                            to edge, so there is no surrounding paper to
+                            balance.
+
+
+IF YOU REPLACE A PHOTO, RE-MEASURE
+----------------------------------
+These numbers belong to the PHOTOGRAPH, not to the position in the grid. When
+lino2 was reshot, the same slot went from needing -0.038 to needing -0.068,
+because the new frame was a different shape (3514x3529 against 2886x3070).
+
+The way to find a new value: process it plain first, look at the page, and
+nudge. Positive vshift puts the subject lower, negative higher. Positive
+hshift keeps more of the left of the original. Roughly 0.045 moves a subject
+about 27px on screen at a 1512px-wide window.
+
+--cell top / --cell bottom applies the band correction automatically using the
+measured 11%. It is the right starting point; --vshift is for when you want it
+exact.
+
+
+TWO THINGS THAT CAN DRIFT
+-------------------------
+1. BAND_HIDE = 0.111 in prepare_images.py is measured from a rendered 296px
+   cell with 33px covered. Change the band's padding or font size and that
+   number is wrong, and --cell will over- or under-correct.
+
+2. A shift costs a little zoom. When the crop already fills one axis of the
+   original there is no slack to move into, so the box shrinks to make room.
+   On a photo with generous paper margins that is an improvement; on one
+   already cropped tight it starts eating into the print.

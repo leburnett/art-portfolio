@@ -41,6 +41,12 @@ except ImportError:
 # ---------------------------------------------------------------- settings
 
 GRID_SIZE   = (600, 750)        # 4:5, ~2x the 252x315 the tile cells render at
+
+# The white title band lies across the middle of a tile and covers ~11% of each
+# cell: the BOTTOM of the two top cells, the TOP of the two bottom cells.
+# Measured in the browser: a 296px cell with 33px hidden. So a centred crop
+# looks off-centre once it is on the page. --cell shifts the crop to cancel it.
+BAND_HIDE   = 0.111
 DEFAULT_LONG_EDGE = 1600        # covers the gallery at 2x and the lightbox at 1x
 QUALITY     = 78
 WATERMARK   = "Laura Elizabeth Burnett"
@@ -111,18 +117,41 @@ def fit_long_edge(im: Image.Image, px: int) -> Image.Image:
     return im.resize((round(w * scale), round(h * scale)), Image.LANCZOS)
 
 
-def crop_to_ratio(im: Image.Image, size) -> Image.Image:
-    """Centre-crop to the target ratio, then resize. The grid cells are 4:5 and
-    crop with object-fit: cover anyway — doing it here means you control it."""
+def crop_to_ratio(im: Image.Image, size, vshift=0.0, hshift=0.0) -> Image.Image:
+    """Centre-crop to the target ratio, then resize.
+
+    vshift / hshift nudge the crop as a fraction of the crop's own height or
+    width. Both follow the same convention: POSITIVE moves the crop WINDOW up
+    or left, so the subject ends up LOWER or FURTHER RIGHT in the output.
+
+    The maximal centred crop usually fills one axis of the original entirely,
+    leaving no slack to move into on that axis. So when a shift is asked for,
+    the box is first shrunk by just enough to create the slack (zooming in a
+    little) and only then moved. Without that the shift silently does nothing.
+    """
     tw, th = size
     target = tw / th
     w, h = im.size
-    if w / h > target:                # too wide: trim the sides
-        new_w = round(h * target)
-        box = ((w - new_w) // 2, 0, (w - new_w) // 2 + new_w, h)
-    else:                             # too tall: trim top and bottom
-        new_h = round(w / target)
-        box = (0, (h - new_h) // 2, w, (h - new_h) // 2 + new_h)
+    sv, sh = abs(vshift), abs(hshift)
+
+    box_h = float(h) if w / h > target else w / target   # maximal centred box
+    if sv:
+        box_h = min(box_h, h / (1 + 2 * sv))             # room to move vertically
+    box_w = box_h * target
+    if sh and box_w > w / (1 + 2 * sh):                  # room to move sideways
+        box_w = w / (1 + 2 * sh)
+        box_h = box_w / target
+    if box_w > w:                                        # safety clamp
+        box_w, box_h = float(w), w / target
+    if box_h > h:
+        box_h, box_w = float(h), h * target
+
+    x = (w - box_w) / 2 - hshift * box_w
+    y = (h - box_h) / 2 - vshift * box_h
+    x = max(0.0, min(w - box_w, x))
+    y = max(0.0, min(h - box_h, y))
+
+    box = (round(x), round(y), round(x + box_w), round(y + box_h))
     return im.crop(box).resize(size, Image.LANCZOS)
 
 
@@ -247,6 +276,17 @@ def main():
     ap.add_argument("--grid", action="store_true",
                     help=f"landing-page tile crops: exactly {GRID_SIZE[0]}x{GRID_SIZE[1]}, "
                          "centre-cropped to 4:5")
+    ap.add_argument("--cell", choices=["top", "bottom"],
+                    help="which half of a tile this crop will sit in. Shifts the "
+                         "crop to cancel the part the title band covers, so the "
+                         "work looks centred once it is on the page.")
+    ap.add_argument("--vshift", type=float, default=None, metavar="F",
+                    help="manual override for --cell, as a fraction of crop "
+                         "height; positive puts the subject lower")
+    ap.add_argument("--hshift", type=float, default=0.0, metavar="F",
+                    help="sideways nudge as a fraction of crop width; positive "
+                         "moves the crop window left, keeping more of the left "
+                         "of the original")
     ap.add_argument("--size", type=int, default=DEFAULT_LONG_EDGE, metavar="PX",
                     help=f"long edge for non-grid images (default {DEFAULT_LONG_EDGE})")
     ap.add_argument("--quality", type=int, default=QUALITY, metavar="N")
@@ -261,6 +301,16 @@ def main():
     inputs = [Path(i).expanduser() for i in a.inputs]
     outdir = Path(a.out).expanduser()
 
+    # bottom cells lose their top to the band, so the subject must sit lower
+    if a.vshift is not None:
+        vshift = a.vshift
+    elif a.cell == "bottom":
+        vshift = BAND_HIDE / 2
+    elif a.cell == "top":
+        vshift = -BAND_HIDE / 2
+    else:
+        vshift = 0.0
+
     files = gather(a.inputs, a.recursive)
     if not files:
         if not a.recursive and any(Path(i).expanduser().is_dir() for i in a.inputs):
@@ -271,7 +321,9 @@ def main():
             if a.grid else f"long edge {a.size}px")
     print(f"\n{len(files)} image(s) -> {outdir}")
     print(f"  {mode}, quality {a.quality}, metadata stripped, "
-          f"watermark {'off' if a.no_watermark else 'on'}\n")
+          f"watermark {'off' if a.no_watermark else 'on'}"
+          + (f", vshift {vshift:+.3f}" if vshift else "")
+          + (f", hshift {a.hshift:+.3f}" if a.hshift else "") + "\n")
 
     if not a.dry_run:
         try:
@@ -291,7 +343,8 @@ def main():
             im = load(src)
             before = im.size
             im = to_srgb(im)
-            im = crop_to_ratio(im, GRID_SIZE) if a.grid else fit_long_edge(im, a.size)
+            im = (crop_to_ratio(im, GRID_SIZE, vshift, a.hshift)
+                  if a.grid else fit_long_edge(im, a.size))
             if not a.no_watermark:
                 im = watermark(im, a.watermark_text)
 
