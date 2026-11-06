@@ -1,22 +1,26 @@
 # Laura Elizabeth Burnett — portfolio site
 
-Five hand-written HTML pages, one stylesheet, one small script. No build step, no
+Four hand-written HTML pages, one stylesheet, one small script. No build step, no
 framework, no dependencies to update. Open any `.html` file in a browser and it works.
 
 ```
 index.html            Hero, the two collection tiles, newsletter bar
 oil-pastels.html      Gallery
 relief-printing.html  Gallery
-misc.html             Gallery — anything outside the other two themes
 about.html            Statement, bio, contact
 assets/css/style.css  All styling. Variables at the top control the whole site.
 assets/js/lightbox.js Click an artwork to enlarge it
 assets/images/        Web-resolution images (committed to git on purpose)
+assets/images/relief/   49 relief prints, numbered 01..49
+assets/images/pastels/  36 oil pastels, numbered 01..36
+tools/build_gallery.py  Regenerates the two gallery pages (see below)
+tools/prepare_images.py Downsamples + strips metadata from a folder of originals
 serve.py              Local preview: python3 serve.py → http://localhost:4321
 ```
 
-Everything marked **FILLER** in the HTML is placeholder text for you to replace.
-Every image in `assets/images/` is a generated grey placeholder.
+The `alt` text on every gallery image is still marked **FILLER** — that is the one
+piece of placeholder content left, and `build_gallery.py` warns you about it on
+every run.
 
 ---
 
@@ -31,12 +35,33 @@ Then open <http://localhost:4321>. Use this rather than double-clicking the file
 
 ## Adding a work to a gallery
 
-1. Export the image at about **1600 px on the long edge**, JPEG quality ~75. That lands
-   around 200–400 KB, which is the right size for the web and far too small for anyone
-   to print from.
-2. Save it into `assets/images/`.
-3. In the gallery page, copy one `<figure class="piece">` block and change three things:
-   the `src`, the `alt` text, and the caption.
+The two gallery pages are **generated**, not hand-edited — anything you type into the
+`<section class="gallery">` block is overwritten on the next build.
+
+1. Drop the full-resolution original into `assets/images/prints/` (relief) or
+   `assets/images/oilpastels/` (pastels). Name it with a leading number; that number
+   is the running order on the page. Those two folders are gitignored.
+2. Run the build:
+
+   ```bash
+   python3 tools/build_gallery.py all
+   ```
+
+   It downsamples to 1200 px / quality 72, strips every scrap of metadata (EXIF
+   location included), writes `assets/images/relief/` and `assets/images/pastels/`,
+   and rewrites the gallery markup in both pages.
+3. Replace the FILLER `alt` text it leaves behind.
+
+If the originals are no longer on this machine, `--html-only` rebuilds the markup from
+the web JPEGs already committed and leaves the images untouched:
+
+```bash
+python3 tools/build_gallery.py all --html-only
+```
+
+Row heights vary on purpose, so the page does not read as a grid. `ROW_TARGETS` near
+the top of `build_gallery.py` controls it — a smaller number means fewer images in that
+row, so a taller row. Edit it and re-run with `--html-only`.
 
 Write real alt text — "a low horizon in burnt orange, the sky scraped back to white" —
 not "oil pastel print". It is what a screen reader announces, and it is most of your
@@ -51,7 +76,8 @@ breakpoints — widen or narrow that middle `vw` value to make it fill more or l
 
 ## Wiring up the newsletter
 
-The form in `index.html` currently posts nowhere. Pick a provider and paste its endpoint
+The form at the foot of **all four pages** currently posts nowhere (`action="#"`),
+so pressing Subscribe silently does nothing. Fix it on all four. Pick a provider and paste its endpoint
 into the `action` attribute — the comment above the form has the Buttondown example.
 [Buttondown](https://buttondown.email) is free to 100 subscribers and exports cleanly,
 which matters: the list is the one asset here you genuinely own.
