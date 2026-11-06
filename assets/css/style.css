@@ -8,6 +8,7 @@
   --grey-light: #a9a9a9;   /* "Artist Portfolio" subtitle */
   --grey-mid:   #5c5c5c;   /* body copy */
   --grey-rule:  #e2e2e2;   /* hairlines */
+  --tile-rule:  #cfcfcf;   /* the outline around the two landing-page cards */
   --paper:      #fff;
 
   --display: "Bebas Neue", Impact, "Haettenschweiler", sans-serif;
@@ -18,7 +19,8 @@
 
   --gutter: clamp(1.25rem, 2.6vw, 2.75rem);
   --gap:    clamp(1.75rem, 4.3vw, 4.25rem);  /* text-to-tile, both sides */
-  --bar-h:  4.6rem;                        /* navbar and news bar share this */
+  --bar-h:  4.6rem;
+  --hero-pad-y: clamp(1.75rem, 4vw, 3.25rem);  /* also feeds the tile height cap */                        /* navbar and news bar share this */
   --measure: 62ch;
 }
 
@@ -56,7 +58,9 @@ a   { color: inherit; }
 }
 
 .nav__mark {
-  font-family: var(--serif);
+  /* Matches the nav links rather than the body serif: the whole bar is one
+     piece of UI chrome, so it is set in one face. */
+  font-family: var(--sans);
   font-size: 0.95rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -82,6 +86,18 @@ a   { color: inherit; }
   transition: color .18s, border-color .18s;
 }
 .nav__links a:hover            { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* The Instagram mark sits in the same row as the links but is an icon, not
+   text: no underline on hover (there is nothing to underline), and the flex
+   centring stops the 17px square riding above the 0.72rem capitals. */
+.nav__social a {
+  display: flex;
+  align-items: center;
+  border-bottom: 0;
+  color: var(--grey-mid);
+}
+.nav__social a:hover,
+.nav__social a:focus-visible { color: var(--ink); border-bottom: 0; }
 .nav__links a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--ink); }
 
 /* --- hero --------------------------------------------------------- */
@@ -103,7 +119,7 @@ a   { color: inherit; }
      the screen edge. Much smaller than the site --gutter so the tiles give up
      as little width as possible. */
   padding-inline: clamp(0.9rem, 1.4vw, 1.5rem);
-  padding-block: clamp(1.75rem, 4vw, 3.25rem);
+  padding-block: var(--hero-pad-y);
 }
 
 .hero__text { text-align: center; }
@@ -147,9 +163,18 @@ a   { color: inherit; }
    max-width then caps it, and justify-self keeps the outer edges flush with
    the page gutters. */
 .hero > .tile {
-  width: 100%;          /* fills its whole column — no cap, so no slack beside
-                           the text. Must stay a definite width (see above). */
+  /* The tile is as wide as its column allows, UNLESS that would make it taller
+     than the space between the two bars — in which case the height leads and
+     the width follows from the 4:5 ratio. Without this the tile height is
+     purely a function of window WIDTH, so a wide-but-short window (any laptop
+     once browser chrome is taken off) pushed the news bar past the bottom and
+     the landing page scrolled by a few dozen pixels.
+
+     Still a definite width, so stretch never enters into it (see .hero). */
+  --tile-h-max: calc(100dvh - 2 * var(--bar-h) - 2 * var(--hero-pad-y));
+  width: min(100%, calc(var(--tile-h-max) * 4 / 5));
   aspect-ratio: 4 / 5;  /* portrait: height grows without taking row width */
+  justify-self: center; /* when the cap bites, the spare width splits evenly */
 }
 
 .tile {
@@ -157,7 +182,7 @@ a   { color: inherit; }
   display: block;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--tile-rule);
   border-radius: 10px;
   text-decoration: none;
   background: var(--paper);
@@ -196,7 +221,8 @@ a   { color: inherit; }
   top: 50%;
   transform: translateY(-50%);
   background: var(--paper);
-  border-block: 1px solid var(--ink);   /* the tile's own sides close the box */
+  border-block: 1px solid var(--tile-rule);  /* matches the card outline; the
+                                                tile's own sides close the box */
   padding: clamp(0.6rem, 1.2vw, 0.9rem) clamp(0.7rem, 1.4vw, 1.05rem);
   font-size: clamp(0.95rem, 1.7vw, 1.45rem);
   letter-spacing: 0.01em;
@@ -293,42 +319,80 @@ a   { color: inherit; }
 }
 .newsbar__form button:hover { background: var(--paper); color: var(--ink); }
 
+/* --- inverted news bar -------------------------------------------------
+
+   A TEST. Add `invert` to the section's class list to switch a page over:
+       <section class="newsbar wrap invert" id="news">
+   Remove the word to go back. Nothing else needs touching, and the ordinary
+   bar above is untouched, so the two can sit side by side while deciding.
+
+   To flip every page at once, from the repo root:
+       sed -i '' 's/class="newsbar wrap"/class="newsbar wrap invert"/' *.html
+   and swap the two halves of that expression to undo it.                 */
+
+.newsbar.invert {
+  background: var(--ink);
+  border-top-color: var(--ink);
+}
+.newsbar.invert .newsbar__mark  { color: rgba(255, 255, 255, 0.55); }
+.newsbar.invert .newsbar__label { color: rgba(255, 255, 255, 0.85); }
+
+/* The field stays transparent with a white rule rather than becoming a white
+   block, so the button is the only bright thing in the bar and still reads as
+   the thing to press. */
+.newsbar.invert .newsbar__form input[type="email"] {
+  background: transparent;
+  color: var(--paper);
+  border-color: rgba(255, 255, 255, 0.65);
+}
+.newsbar.invert .newsbar__form input[type="email"]::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+.newsbar.invert .newsbar__form input[type="email"]:focus {
+  outline-color: var(--paper);
+  border-color: var(--paper);
+}
+
+.newsbar.invert .newsbar__form button {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+.newsbar.invert .newsbar__form button:hover {
+  background: transparent;
+  color: var(--paper);
+}
+
+/* On the interior pages the bar closes the content instead of being pinned to
+   the viewport, so it needs a little clear space above it. The landing page
+   gets none: it is already pushed to the bottom edge by the flex column. */
+body:not(.home) .newsbar { margin-top: clamp(1.5rem, 3.5vh, 5rem); }
+
 /* --- landing page fills the viewport, so the news bar lands on the
        bottom edge on load. min-height, not height: if the window is short
        the page simply scrolls instead of clipping. ---------------------- */
 
-body.home {
+body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
+body > main { flex: 1 1 auto; }   /* the news bar is pushed to the bottom edge
+                                     on any page whose content is shorter than
+                                     the window, not just the landing page */
 body.home main {
   flex: 1 1 auto;
   display: grid;
   align-content: center;
 }
 
-/* --- footer ------------------------------------------------------- */
-
-.foot {
-  border-top: 1px solid var(--grey-rule);
-  padding-block: 2rem 2.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem 2rem;
-  justify-content: space-between;
-  font-family: var(--sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  color: var(--grey-light);
-}
-.foot a { color: var(--grey-mid); text-decoration: none; }
-.foot a:hover { color: var(--ink); }
-
 /* --- interior pages ---------------------------------------------- */
 
 .page-head {
-  padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 5vw, 3.5rem);
+  /* vh, not vw. Vertical space should answer to how tall the window is: on a
+     short laptop window the vw-based padding spent 152px on air above the
+     prose and tipped the page into a needless scroll. */
+  padding-block: clamp(2rem, 5.5vh, 6rem) clamp(1.25rem, 3vh, 3.5rem);
 }
 
 .page-head h1 {
@@ -346,17 +410,51 @@ body.home main {
   color: var(--grey-mid);
 }
 
-/* gallery: CSS columns, so portrait and landscape work sit together
-   without any JavaScript masonry library */
+/* gallery: explicit justified ROWS.
+
+   Each row is its own flex line, stretched across the full width. Inside a
+   row every figure gets `flex: var(--ar) var(--ar) 0` — a basis of zero and a
+   grow proportional to its aspect ratio — so the whole available width (after
+   gaps) is shared out in proportion to the ratios. Width proportional to ratio
+   means every image in the row lands on exactly the same height, with nothing
+   cropped or stretched, and the row's right edge comes out flush.
+
+   The variation comes from how many images a row holds, decided in
+   build_gallery.py: row height is about (width - gaps) / (sum of the row's
+   ratios), so a row of two portraits is tall and a row of five landscapes is
+   short. That is why the page does not read as a grid.
+
+   It must be done per ROW, not per image. flex-grow shares out only the
+   LEFTOVER space, so width is proportional to ratio only while every item in
+   the row carries the same weight. Giving each image its own weight broke the
+   justification and scattered the heights within each row. */
 .gallery {
-  columns: 3 18rem;
-  column-gap: clamp(1rem, 2.5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.25vw, 1rem);
   padding-bottom: clamp(3rem, 7vw, 5rem);
 }
 
+.gallery__row {
+  display: flex;
+  gap: clamp(0.5rem, 1.25vw, 1rem);
+  align-items: flex-start;
+}
+
 .piece {
-  break-inside: avoid;
-  margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+  margin: 0;
+  min-width: 0;                 /* flex items must be allowed to shrink */
+  flex: var(--ar) var(--ar) 0;
+}
+
+/* The last row is usually a remainder and would be stretched grotesquely wide
+   if it were justified like the others, so it keeps a fixed height instead and
+   simply stops short of the right edge. */
+.gallery__row--last {
+  --row-h: clamp(12rem, 26vw, 30rem);
+}
+.gallery__row--last .piece {
+  flex: 0 0 calc(var(--ar) * var(--row-h));
 }
 
 .piece img { width: 100%; cursor: zoom-in; }
@@ -372,20 +470,51 @@ body.home main {
 /* about */
 .about {
   display: grid;
-  /* Column one is sized to the prose measure rather than a share of the page,
-     and column two to the photo itself. justify-content: start then packs both
-     to the left, so the photo sits beside the text instead of being pushed out
-     to the right gutter by an oversized, half-empty column. */
-  grid-template-columns: minmax(0, 38rem) auto;
+  /* Column one is the prose measure exactly, not a round number larger than
+     it: at 38rem the column was 608px against 492px of text, so 116px of dead
+     space sat between the words and the photo and no gap value could close it.
+     justify-content: start then packs both columns to the left. */
+  /* Column two is a definite width, not auto: its only child is absolutely
+     positioned and so contributes no intrinsic width. (Same trap as the
+     landing-page tiles.) */
+  grid-template-columns: minmax(0, var(--measure)) clamp(13rem, 23vw, 22rem);
   justify-content: start;
   gap: clamp(1.5rem, 3vw, 2.75rem);
   align-items: start;
-  padding-bottom: clamp(3rem, 7vw, 5rem);
+  padding-bottom: clamp(1.5rem, 3.5vh, 5rem);
 }
 
-.about__photo img { max-width: 22rem; }
+/* The portrait is matched to the prose, top and bottom.
+
+   The source photo is much taller than the text block, so align-self alone
+   cannot do it: the taller item sets the row height, and the photo WAS the
+   taller item (625px of portrait against 450px of text). Instead the column is
+   given a definite width and the image is taken out of flow to fill the row,
+   which is then set by the prose alone. The photo therefore starts and ends
+   exactly where the text does, at any window width.
+
+   The trade is a crop. object-position is the single value to turn: the second
+   number is which part of the photo survives vertically, 0% = keep the top,
+   100% = keep the bottom. */
+.about__photo {
+  position: relative;
+  align-self: stretch;
+  overflow: hidden;
+}
+.about__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
 .about__prose { max-width: var(--measure); }
 .about__prose p { margin: 0 0 1.4rem; }
+/* The trailing margin would otherwise put 1.4rem of air between the last line
+   of text and the bottom of the row, so the photo would hang below it. */
+.about__prose > :last-child { margin-bottom: 0; }
 .about__prose h2 {
   margin: 2.5rem 0 0.75rem;
   font-weight: 400;
@@ -438,7 +567,14 @@ body.home main {
   .hero { grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 4vw, 2.5rem); }
   .hero__text { grid-column: 1 / -1; order: -1; }
   .hero { padding-inline: var(--gutter); }
-  .hero > .tile { max-width: none; aspect-ratio: 1 / 1; }
+  .hero > .tile { max-width: none; width: 100%; aspect-ratio: 1 / 1; }
+}
+
+/* On a phone a row of four would make each print a thumbnail, so rows unwrap
+   into a single column. */
+@media (max-width: 560px) {
+  .gallery__row { flex-direction: column; }
+  .gallery__row--last .piece { flex: 0 0 auto; }
 }
 
 @media (max-width: 680px) {
@@ -448,7 +584,11 @@ body.home main {
   .newsbar__form { flex-wrap: wrap; }
   .hero { grid-template-columns: 1fr; }
   .about       { grid-template-columns: 1fr; }
-  .about__photo { order: -1; }
+  /* Stacked, there is no text beside it to match, so the photo returns to
+     normal flow at its own aspect ratio. */
+  .about__photo { order: -1; position: static; overflow: visible; }
+  .about__photo img { position: static; width: auto; height: auto;
+                      max-width: 18rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
