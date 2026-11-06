@@ -578,17 +578,33 @@ body.home main {
 }
 
 @media (max-width: 680px) {
-  .nav         { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .newsbar     { flex-direction: column; align-items: flex-start; gap: 1rem;
-                 padding-block: 1.5rem; }
-  .newsbar__form { flex-wrap: wrap; }
+  /* Stacked into a column, a left-aligned wordmark sits in a wide empty row
+     and reads as a mistake rather than a margin. Centred, the bar becomes a
+     deliberate masthead. align-items does both the mark and the links row,
+     since they are the two children of the column. */
+  .nav         { flex-direction: column; align-items: center; gap: 1rem;
+                 text-align: center; }
+  .newsbar     { flex-direction: column; align-items: center; gap: 1rem;
+                 padding-block: 1.5rem; text-align: center; }
+  .newsbar__form { flex-wrap: wrap; justify-content: center; }
+
+  /* THE overflow source on a phone. At 0.68rem with 0.17em of tracking this
+     sentence measures ~395px, and `white-space: nowrap` (right for the wide
+     bar, where it must not break mid-phrase beside the input) forbade it from
+     wrapping. On a 390px screen it hung 31px past the edge and dragged the
+     whole page with it. Letting it wrap removes the overflow at source --
+     clipping it would have hidden the symptom and kept the bad line. */
+  .newsbar__label { white-space: normal; margin-right: 0; line-height: 1.5;
+                    letter-spacing: 0.12em; max-width: 24rem; }
+
   .hero { grid-template-columns: 1fr; }
   .about       { grid-template-columns: 1fr; }
   /* Stacked, there is no text beside it to match, so the photo returns to
-     normal flow at its own aspect ratio. */
+     normal flow at its own aspect ratio. margin-inline centres it against the
+     prose below, which is full-bleed in one column. */
   .about__photo { order: -1; position: static; overflow: visible; }
   .about__photo img { position: static; width: auto; height: auto;
-                      max-width: 18rem; }
+                      max-width: 18rem; margin-inline: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
