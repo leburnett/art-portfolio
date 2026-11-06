@@ -17,11 +17,20 @@
   <nav class="nav">
     <a class="nav__mark" href="index.html">Laura Elizabeth Burnett</a>
     <ul class="nav__links">
-      <li><a href="index.html">Home</a></li>
       <li><a href="oil-pastels.html" aria-current="page">Oil pastels</a></li>
       <li><a href="relief-printing.html">Relief printing</a></li>
-      <li><a href="misc.html">Misc</a></li>
       <li><a href="about.html">About</a></li>
+      <li class="nav__social"><a href="https://www.instagram.com/elbe.elbe.elbe/"
+             target="_blank" rel="noopener me" aria-label="Instagram: @elbe.elbe.elbe"
+             title="@elbe.elbe.elbe">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none"
+             stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <rect x="3" y="3" width="18" height="18" rx="5.2"/>
+          <circle cx="12" cy="12" r="4.1"/>
+          <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/>
+        </svg>
+      </a></li>
     </ul>
   </nav>
 </header>
@@ -32,61 +41,227 @@
     <h1>Oil pastels</h1>
 
     <p>
-      My most recent oil pastel pieces are abstract and are inspired by fluid, fractal patterns in nature such as variegated leaves, ombré petals, stratified rock formations and Turing boundary patterns.
+      My abstract oil pastel pieces are inspired by patterns in nature such as variegated leaves, ombré petals, stratified rocks and lichen boundary patterns.
     </p>
   </section>
 
   <!-- ===================================================================
-       To add a work: copy one <figure class="piece"> block and change the
-       src, the alt text, and the caption. Nothing else needs touching.
-       Keep images around 1600px on the long edge, JPEG quality ~75.
+       36 oil pastel pieces in 9 rows, in the numeric order of
+       the source filenames in assets/images/oilpastels/.
+
+       THIS BLOCK IS GENERATED. Do not hand-edit it — the next build
+       will overwrite whatever you put here. To change what appears,
+       change the originals and run:
+
+         python3 tools/build_gallery.py pastels
+
+       To reorder, renumber the originals. To remove a piece, take it
+       out of the source folder. Both then rebuild cleanly.
+
+       CAPTIONS are not written yet. When you want them, the honest
+       way is to stop generating this block: delete this comment, and
+       the file becomes ordinary hand-edited HTML again. A caption
+       goes inside the figure, after the <img>:
+         <figcaption><strong>Title</strong><br>Oil pastel on paper, 2026 &middot; 300 &times; 300 mm</figcaption>
+       The lightbox picks it up automatically.
        =================================================================== -->
   <section class="gallery wrap">
 
-    <figure class="piece">
-      <img src="assets/images/pastel-1.jpg" loading="lazy" width="900" height="1200"
-           alt="Placeholder image. Replace with a description of the work: subject, colours, mood.">
-      <figcaption><strong>Untitled (filler)</strong><br>Oil pastel on paper, 2026 · 297 × 420 mm</figcaption>
-    </figure>
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/01.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7200">
+        <img src="assets/images/pastels/02.jpg" loading="lazy" width="864" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7733">
+        <img src="assets/images/pastels/03.jpg" loading="lazy" width="928" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 1.0204">
+        <img src="assets/images/pastels/04.jpg" loading="lazy" width="1200" height="1176"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
 
-    <figure class="piece">
-      <img src="assets/images/pastel-2.jpg" loading="lazy" width="1200" height="900"
-           alt="Placeholder image. Replace with a description of the work.">
-      <figcaption><strong>Untitled (filler)</strong><br>Oil pastel on paper, 2026 · 420 × 297 mm</figcaption>
-    </figure>
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.7425">
+        <img src="assets/images/pastels/05.jpg" loading="lazy" width="891" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 1.0101">
+        <img src="assets/images/pastels/06.jpg" loading="lazy" width="1200" height="1188"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7225">
+        <img src="assets/images/pastels/07.jpg" loading="lazy" width="867" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
 
-    <figure class="piece">
-      <img src="assets/images/pastel-3.jpg" loading="lazy" width="1000" height="1000"
-           alt="Placeholder image. Replace with a description of the work.">
-      <figcaption><strong>Untitled (filler)</strong><br>Oil pastel on paper, 2026 · 300 × 300 mm</figcaption>
-    </figure>
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.7258">
+        <img src="assets/images/pastels/08.jpg" loading="lazy" width="871" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 1.8634">
+        <img src="assets/images/pastels/09.jpg" loading="lazy" width="1200" height="644"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7158">
+        <img src="assets/images/pastels/10.jpg" loading="lazy" width="859" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 1.0025">
+        <img src="assets/images/pastels/11.jpg" loading="lazy" width="1200" height="1197"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
 
-    <figure class="piece">
-      <img src="assets/images/pastel-4.jpg" loading="lazy" width="900" height="1200"
-           alt="Placeholder image. Replace with a description of the work.">
-      <figcaption><strong>Untitled (filler)</strong><br>Oil pastel on paper, 2025 · 297 × 420 mm</figcaption>
-    </figure>
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.4875">
+        <img src="assets/images/pastels/12.jpg" loading="lazy" width="585" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7267">
+        <img src="assets/images/pastels/13.jpg" loading="lazy" width="872" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7117">
+        <img src="assets/images/pastels/14.jpg" loading="lazy" width="854" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7308">
+        <img src="assets/images/pastels/15.jpg" loading="lazy" width="877" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7083">
+        <img src="assets/images/pastels/16.jpg" loading="lazy" width="850" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
 
-    <figure class="piece">
-      <img src="assets/images/pastel-5.jpg" loading="lazy" width="1200" height="900"
-           alt="Placeholder image. Replace with a description of the work.">
-      <figcaption><strong>Untitled (filler)</strong><br>Oil pastel on paper, 2025 · 420 × 297 mm</figcaption>
-    </figure>
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.7292">
+        <img src="assets/images/pastels/17.jpg" loading="lazy" width="875" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.9975">
+        <img src="assets/images/pastels/18.jpg" loading="lazy" width="1197" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.4192">
+        <img src="assets/images/pastels/19.jpg" loading="lazy" width="503" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.3950">
+        <img src="assets/images/pastels/20.jpg" loading="lazy" width="474" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.3917">
+        <img src="assets/images/pastels/23.jpg" loading="lazy" width="470" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.3850">
+        <img src="assets/images/pastels/24.jpg" loading="lazy" width="462" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
 
-    <figure class="piece">
-      <img src="assets/images/pastel-6.jpg" loading="lazy" width="1000" height="1250"
-           alt="Placeholder image. Replace with a description of the work.">
-      <figcaption><strong>Untitled (filler)</strong><br>Oil pastel on paper, 2025 · 240 × 300 mm</figcaption>
-    </figure>
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/26.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/27.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/28.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/29.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
+
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/30.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/31.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/32.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/33.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/34.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
+
+    <div class="gallery__row">
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/36.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/38.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/39.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+      <figure class="piece" style="--ar: 1.3333">
+        <img src="assets/images/pastels/40.jpg" loading="lazy" width="1200" height="900"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
+
+    <div class="gallery__row gallery__row--last">
+      <figure class="piece" style="--ar: 0.7500">
+        <img src="assets/images/pastels/41.jpg" loading="lazy" width="900" height="1200"
+             alt="FILLER — describe this piece: subject, colours, mood.">
+      </figure>
+    </div>
 
   </section>
 
 </main>
 
-<footer class="foot wrap">
-  <span>&copy; 2026 Laura Elizabeth Burnett</span>
-  <span><a href="index.html#news">Studio news</a></span>
-</footer>
+<!-- NEWS BAR: shared by every page. On the landing page the body is sized
+     to 100dvh so it sits on the bottom edge of the screen on load; on the
+     interior pages it simply closes the content.
+
+     TO MAKE IT WORK: replace action="#" with your newsletter provider's
+     endpoint and check the field name it expects. Buttondown, free to 100
+     subscribers, is:
+       action="https://buttondown.email/api/emails/embed-subscribe/YOUR-USERNAME"
+       method="post"   field name="email"
+-->
+<section class="newsbar wrap" id="news">
+  <span class="newsbar__mark">&copy; 2026 Laura Elizabeth Burnett</span>
+  <form class="newsbar__form" action="#" method="post">
+    <span class="newsbar__label">Subscribe to my <b>newsletter</b> for regular updates</span>
+    <input type="email" name="email" required
+           autocomplete="email" aria-label="Email address"
+           placeholder="your@email.com">
+    <button type="submit">Subscribe</button>
+  </form>
+</section>
 
 <script src="assets/js/lightbox.js" defer></script>
 </body>
