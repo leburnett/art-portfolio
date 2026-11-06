@@ -17,11 +17,20 @@
   <nav class="nav">
     <a class="nav__mark" href="index.html">Laura Elizabeth Burnett</a>
     <ul class="nav__links">
-      <li><a href="index.html">Home</a></li>
       <li><a href="oil-pastels.html">Oil pastels</a></li>
       <li><a href="relief-printing.html">Relief printing</a></li>
-      <li><a href="misc.html">Misc</a></li>
       <li><a href="about.html" aria-current="page">About</a></li>
+      <li class="nav__social"><a href="https://www.instagram.com/elbe.elbe.elbe/"
+             target="_blank" rel="noopener me" aria-label="Instagram: @elbe.elbe.elbe"
+             title="@elbe.elbe.elbe">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none"
+             stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <rect x="3" y="3" width="18" height="18" rx="5.2"/>
+          <circle cx="12" cy="12" r="4.1"/>
+          <circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/>
+        </svg>
+      </a></li>
     </ul>
   </nav>
 </header>
@@ -39,31 +48,24 @@
       <h2>Hello! 👋</h2>
       <br>
       <p>
-        My name is Laura and I'm a linocut relief printmaker and oil pastel artist currently based in London. 
+        Welcome to my <b>personal portfolio page</b> — a place where I can digitally archive and share my recent creations.
         <br>
         <br>
-        For as long as I can remember I have loved creating. I take a lot of inspiration from nature and natural forms as well as interesting and vibrant colour combinations. 
+        Recently, I have mostly worked on nature-inspired linocut prints and abstract oil pastel pieces.
+        I enjoy focussing on the detailed minutae in the linocut prints and the viscerally tactile aspect of using oil pastels.
         <br>
         <br>
-        I find both mediums that I work with meditive in different ways. 
+        Outside of art, I am a trained <a href="http://leburnett.github.io">research scientist</a> and, unsurprisingly for someone so affected by what I see around me, 
+        I have spent over a decade researching <b>how brains use and interpret visual information</b>. 
         <br>
-        <br>
-        I enjoy focussing on the minutae and the detail in the linocut prints, 
-        and allowing myself to think more abstractly and appreciate the tactile nature of oil pastel work.
-        <br>
-        <br>
-        Thank you for visiting my site.
+        <br>        
+        Thank you for visiting my site and please <a href="mailto:leburnett3@gmail.com">get in touch</a> if you have any comments or questions.
       </p>
 
-      <h2>Contact</h2>
-      <p>
-        For enquiries about available work, commissions or exhibitions please send me an 
-        <a href="mailto:leburnett3@gmail.com.com">email</a>.
-      </p>
     </div>
 
     <div class="about__photo">
-      <img src="assets/images/portrait.jpg" width="900" height="1100"
+      <img src="assets/images/portrait.jpg" width="732" height="1300"
            alt="Placeholder. Replace with a photo of you in the studio, or a work in progress.">
     </div>
 
@@ -71,10 +73,26 @@
 
 </main>
 
-<footer class="foot wrap">
-  <span>&copy; 2026 Laura Elizabeth Burnett</span>
-  <span><a href="index.html#news">Studio news</a></span>
-</footer>
+<!-- NEWS BAR: shared by every page. On the landing page the body is sized
+     to 100dvh so it sits on the bottom edge of the screen on load; on the
+     interior pages it simply closes the content.
+
+     TO MAKE IT WORK: replace action="#" with your newsletter provider's
+     endpoint and check the field name it expects. Buttondown, free to 100
+     subscribers, is:
+       action="https://buttondown.email/api/emails/embed-subscribe/YOUR-USERNAME"
+       method="post"   field name="email"
+-->
+<section class="newsbar wrap" id="news">
+  <span class="newsbar__mark">&copy; 2026 Laura Elizabeth Burnett</span>
+  <form class="newsbar__form" action="#" method="post">
+    <span class="newsbar__label">Subscribe to my <b>newsletter</b> for regular updates</span>
+    <input type="email" name="email" required
+           autocomplete="email" aria-label="Email address"
+           placeholder="your@email.com">
+    <button type="submit">Subscribe</button>
+  </form>
+</section>
 
 </body>
 </html>
