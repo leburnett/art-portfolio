@@ -34,7 +34,7 @@ import tempfile
 from pathlib import Path
 
 try:
-    from PIL import Image, ImageCms, ImageDraw, ImageFilter, ImageFont
+    from PIL import Image, ImageCms, ImageDraw, ImageFilter, ImageFont, ImageOps
 except ImportError:
     sys.exit("Pillow is required:  python3 -m pip install --user Pillow")
 
@@ -65,8 +65,21 @@ FONT_CANDIDATES = [
 # ---------------------------------------------------------------- loading
 
 
+def upright(im: Image.Image) -> Image.Image:
+    """Bake the EXIF orientation into the pixels.
+
+    A phone does not rotate the sensor data; it records how the camera was held
+    in EXIF tag 274 and leaves the viewer to turn the picture. A portrait photo
+    is therefore stored as, say, 5712x4284 landscape with "rotate 90" noted
+    alongside. Because this script STRIPS metadata, that instruction would be
+    thrown away and the picture would land on the page on its side. Rotating
+    the pixels here is the only way to keep the orientation once the tag is
+    gone, so this must happen on load, before anything else."""
+    return ImageOps.exif_transpose(im)
+
+
 def load(path: Path) -> Image.Image:
-    """Open an image read-only. HEIC goes via sips into a temp file."""
+    """Open an image read-only, upright. HEIC goes via sips into a temp file."""
     if path.suffix.lower() in HEIC:
         if not shutil.which("sips"):
             raise RuntimeError("HEIC needs the macOS `sips` tool, which wasn't found")
@@ -79,7 +92,7 @@ def load(path: Path) -> Image.Image:
                 check=True, capture_output=True,
             )
             with Image.open(tmp) as im:
-                return im.copy()
+                return upright(im).copy()
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"sips could not read it: {e.stderr.decode()[:120]}")
         finally:
@@ -87,12 +100,34 @@ def load(path: Path) -> Image.Image:
 
     with Image.open(path) as im:      # 'rb' only; never modified
         im.load()
-        return im.copy()
+        return upright(im).copy()
+
+
+FLATTEN_BG = (255, 255, 255)      # the site background
+
+
+def flatten(im: Image.Image) -> Image.Image:
+    """Composite any transparency onto white before the alpha channel is lost.
+
+    JPEG has no alpha. A plain .convert("RGB") on a cut-out PNG does not blend
+    it onto anything — it just drops the alpha channel and leaves whatever RGB
+    happened to sit under the transparent pixels, which in most editors' output
+    is black. A cut-out portrait therefore arrived on the page on a black
+    rectangle. Compositing first is the fix, and white matches the site."""
+    if im.mode in ("RGBA", "LA") or (
+            im.mode == "P" and "transparency" in im.info):
+        im = im.convert("RGBA")
+        bg = Image.new("RGBA", im.size, FLATTEN_BG + (255,))
+        im = Image.alpha_composite(bg, im)
+    return im
 
 
 def to_srgb(im: Image.Image) -> Image.Image:
     """Browsers assume sRGB. A wide-gamut file renders dull and colour-shifted,
     which matters more on a portfolio of colour work than file size does."""
+    # Before the profile conversion: profileToProfile(outputMode="RGB") would
+    # itself discard the alpha channel, and then it is too late to blend.
+    im = flatten(im)
     profile = im.info.get("icc_profile")
     if profile:
         try:
